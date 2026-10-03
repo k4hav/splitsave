@@ -35,10 +35,7 @@ SplitSave runs entirely in the browser. There is no backend, no database and no 
 ### History
 - Completed payments are saved automatically in the browser.
 - A payment of ₹3,000 paid in two parts is shown as `₹3,000 × 2` with the individual parts listed underneath.
-- A summary at the top shows the total amount collected and the number of payments.
-- Every completed payment is kept, with no fixed limit. Only your browser's storage quota applies, which is enough for tens of thousands of entries.
-- The newest 20 entries are shown first, with a "Show more" button for older ones.
-- Reuse a previous amount with one tap. History can't be deleted from inside the app.
+- Reuse a previous amount, delete a single entry or clear everything. The latest 50 entries are kept.
 
 ### Sharing
 - A share menu is available on the home page, the QR page and the completion screen.
