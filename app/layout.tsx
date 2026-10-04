@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Patrick_Hand } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font" });
-const hand = Patrick_Hand({ subsets: ["latin"], weight: "400", variable: "--font-hand" });
 
 export const metadata: Metadata = {
   title: "SplitSave",
@@ -16,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
-      <body className={`${font.variable} ${hand.variable}`}>{children}</body>
+      <body className={font.variable}>{children}</body>
     </html>
   );
 }
