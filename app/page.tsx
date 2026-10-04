@@ -117,7 +117,7 @@ function SocialIcon({ k }: { k: string }) {
     instagram: "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zM7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zM12 7.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zM12 9.4a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2zM17.5 5.3a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z",
     x: G.x,
   };
-  return <svg className="doodle-svg" viewBox="0 0 24 24" aria-hidden><path fillRule="evenodd" d={d[k]} /></svg>;
+  return <svg className="soc-svg" viewBox="0 0 24 24" aria-hidden><path fillRule="evenodd" d={d[k]} /></svg>;
 }
 
 const ord = (n: number) => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
@@ -245,9 +245,6 @@ export default function Home() {
 
   return (
     <main className="wrap">
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden>
-        <filter id="pencil-texture"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" /><feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G" /></filter>
-      </svg>
       <div className="topbar">
         <ThemeBtn dark={dark} onClick={toggleTheme} />
         <ShareMenu text="SplitSave: split a large UPI payment into smaller QR codes." url={siteUrl || undefined} toast={notify} />
@@ -382,28 +379,29 @@ export default function Home() {
       <footer className="foot">
         <p>Built by Keshav</p>
         <small>Find me here</small>
-        <motion.div initial={{ opacity: 0, y: 24, rotate: -2 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
-          <ul className="doodle-container">
-            {SOCIALS.map((s) => (
-              <li key={s.k} className="doodle-icon-content">
-                <a className={"doodle-link link-" + s.k} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}><SocialIcon k={s.k} /></a>
-                <span className={"doodle-tooltip tooltip-" + s.k}>{s.label}</span>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
+        <ul className="socials">
+          {SOCIALS.map((s, i) => (
+            <motion.li key={s.k} initial={{ opacity: 0, y: 20, scale: 0.8 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: "spring", stiffness: 220, damping: 16 }}>
+              <a className="soc" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} data-label={s.label} style={{ "--bg-brand": s.bg } as CSSProperties}>
+                <SocialIcon k={s.k} />
+              </a>
+            </motion.li>
+          ))}
+        </ul>
       </footer>
 
       <AnimatePresence>
         {showConnect && (
-          <motion.aside className="connect" aria-label="Let's connect"
-            initial={{ y: 90, opacity: 0, rotate: 5 }} animate={{ y: 0, opacity: 1, rotate: -1.5 }} exit={{ y: 90, opacity: 0, rotate: 6 }} transition={{ type: "spring", stiffness: 170, damping: 13 }}>
-            <button className="connect-x" onClick={closeConnect} aria-label="Close"><Icon n="x" size={18} /></button>
-            <h4>Let&apos;s connect!</h4>
+          <motion.aside className="raised connect" aria-label="Let's connect"
+            initial={{ y: 90, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 90, opacity: 0 }} transition={{ type: "spring", stiffness: 170, damping: 20 }}>
+            <button className="iconbtn nclose connect-x" onClick={closeConnect} aria-label="Close"><Icon n="x" size={16} /></button>
+            <h4>Let&apos;s connect</h4>
             <p>Thanks for trying SplitSave. Follow along for more projects.</p>
             <div className="connect-row">
               {SOCIALS.map((s) => (
-                <a key={s.k} className={"doodle-link link-" + s.k} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label}><SocialIcon k={s.k} /></a>
+                <a key={s.k} className="soc" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label} style={{ "--bg-brand": s.bg } as CSSProperties}>
+                  <SocialIcon k={s.k} />
+                </a>
               ))}
             </div>
           </motion.aside>
