@@ -126,3 +126,17 @@ button:focus-visible { outline:2px solid rgba(108,92,231,.5); outline-offset:3px
 .stat { padding:16px 18px; border-radius:20px; box-shadow:inset 5px 5px 10px var(--d),inset -5px -5px 10px var(--l); }
 .stat small { display:block; margin-bottom:4px; font-weight:600; } .stat strong { display:block; font-size:1.55rem; letter-spacing:-.02em; color:var(--acc); overflow-wrap:anywhere; }
 .more { display:block; margin:20px auto 0; }
+
+.notice { position:relative; padding:20px 20px 18px; margin-top:26px; }
+.notice::before { content:""; position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg,transparent,var(--acc),transparent); background-size:200% 100%; animation:sweep 3s linear infinite; }
+.nhead { display:flex; align-items:center; gap:12px; } .nhead strong { flex:1; font-size:1.05rem; }
+.nicon { position:relative; width:38px; height:38px; border-radius:50%; display:grid; place-items:center; color:var(--acc); background:var(--bg); box-shadow:inset 3px 3px 6px var(--d),inset -3px -3px 6px var(--l); }
+.nicon::after { content:""; position:absolute; inset:0; border-radius:50%; border:2px solid var(--acc); animation:ring 2s ease-out infinite; }
+.nclose { width:34px; height:34px; color:var(--muted); }
+.nlead { margin-top:14px; color:var(--muted); line-height:1.5; font-size:.92rem; }
+.nlist { list-style:none; padding:0; display:grid; gap:14px; margin-top:16px; } .nlist li { display:flex; gap:12px; align-items:flex-start; }
+.ni { width:36px; height:36px; flex-shrink:0; border-radius:12px; display:grid; place-items:center; color:var(--acc); background:var(--bg); box-shadow:4px 4px 8px var(--d),-3px -3px 6px var(--l); }
+.nlist b { display:block; font-size:.95rem; } .nlist small { display:block; margin-top:2px; line-height:1.4; }
+.nfoot { display:block; margin-top:16px; padding-top:14px; border-top:1px solid rgba(128,128,128,.2); }
+@keyframes sweep { from { background-position:200% 0; } to { background-position:-200% 0; } }
+@keyframes ring { from { transform:scale(1); opacity:.6; } to { transform:scale(1.7); opacity:0; } }
