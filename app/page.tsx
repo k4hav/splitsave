@@ -112,16 +112,12 @@ const SOCIALS = [
   { k: "x", label: "X", href: "https://x.com/k4hav", bg: "#000000" },
 ];
 function SocialIcon({ k }: { k: string }) {
-  if (k === "instagram")
-    return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><path d="M17.5 6.5h.01" />
-      </svg>
-    );
-  const d = k === "github"
-    ? "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-    : G.x;
-  return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d={d} /></svg>;
+  const d: Record<string, string> = {
+    github: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12",
+    instagram: "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zM7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zM12 7.4a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zM12 9.4a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2zM17.5 5.3a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z",
+    x: G.x,
+  };
+  return <svg className="doodle-svg" viewBox="0 0 24 24" aria-hidden><path fillRule="evenodd" d={d[k]} /></svg>;
 }
 
 const ord = (n: number) => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
@@ -182,6 +178,8 @@ export default function Home() {
   const [siteUrl, setSiteUrl] = useState("");
   const [shown, setShown] = useState(20);
   const [notice, setNotice] = useState(false);
+  const [connectReady, setConnectReady] = useState(false);
+  const [connectOff, setConnectOff] = useState(false);
   const [fi, setFi] = useState<[number, number]>([0, 1]);
 
   useEffect(() => {
@@ -195,6 +193,11 @@ export default function Home() {
   useEffect(() => { try { localStorage.setItem("splitpay", JSON.stringify({ upi, name })); } catch {} }, [upi, name]);
   useEffect(() => { document.body.style.overflow = session ? "hidden" : ""; }, [session]);
   useEffect(() => { try { if (!localStorage.getItem("splitsave-notice-v1")) setNotice(true); } catch { setNotice(true); } }, []);
+  useEffect(() => {
+    try { if (localStorage.getItem("splitsave-connect-v1")) { setConnectOff(true); return; } } catch {}
+    const t = setTimeout(() => setConnectReady(true), 30000);
+    return () => clearTimeout(t);
+  }, []);
   useEffect(() => { setDark(document.documentElement.dataset.theme === "dark"); setSiteUrl(window.location.href); }, []);
   useEffect(() => { document.documentElement.dataset.theme = dark ? "dark" : "light"; }, [dark]);
   const persist = (h: Entry[]) => { setHistory(h); try { localStorage.setItem("splitpay-history", JSON.stringify(h)); } catch {} };
@@ -226,20 +229,25 @@ export default function Home() {
       persist([{ id: Date.now(), total: session.total, parts: session.parts, split: session.split, at: new Date().toISOString() }, ...history]);
     }, 600);
   };
+  const closeConnect = () => { setConnectOff(true); try { localStorage.setItem("splitsave-connect-v1", "1"); } catch {} };
   const closeNotice = () => { setNotice(false); try { localStorage.setItem("splitsave-notice-v1", "1"); } catch {} };
   const notify = (m: string) => { setToast(m); setTimeout(() => setToast(null), 1800); };
   const toggleTheme = () => { const n = !dark; setDark(n); try { localStorage.setItem("splitsave-theme", n ? "dark" : "light"); } catch {} };
   const generate = () => { if (launch) return; setLaunch(true); setTimeout(() => { setLaunch(false); start(); }, 520); };
-  const closeSession = () => { if (finished) setAmount(""); setSession(null); };
+  const closeSession = () => { if (finished) { setAmount(""); setConnectReady(true); } setSession(null); };
   const fmtDate = (iso: string) => new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
   const totalCollected = history.reduce((sum, h) => sum + Math.round(h.total * 100), 0) / 100;
+  const showConnect = connectReady && !connectOff && !session && !notice;
   const shareText = !session ? "" : finished
     ? `Collected ${inr(session.total)}${session.parts.length > 1 ? ` in ${session.parts.length} payments` : ""} with SplitSave.`
     : `Pay ${inr(session.parts[idx])} to ${session.name || session.upi} via UPI\n` + upiLink(session.upi, session.name, session.parts[idx], session.parts.length > 1 ? `Part ${idx + 1}/${session.parts.length}` : "Payment");
 
   return (
     <main className="wrap">
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden>
+        <filter id="pencil-texture"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" /><feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G" /></filter>
+      </svg>
       <div className="topbar">
         <ThemeBtn dark={dark} onClick={toggleTheme} />
         <ShareMenu text="SplitSave: split a large UPI payment into smaller QR codes." url={siteUrl || undefined} toast={notify} />
@@ -374,16 +382,33 @@ export default function Home() {
       <footer className="foot">
         <p>Built by Keshav</p>
         <small>Find me here</small>
-        <ul className="socials">
-          {SOCIALS.map((s, i) => (
-            <motion.li key={s.k} initial={{ opacity: 0, y: 20, scale: 0.8 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: "spring", stiffness: 220, damping: 16 }}>
-              <a className="soc" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} data-label={s.label} style={{ "--bg-brand": s.bg } as CSSProperties}>
-                <SocialIcon k={s.k} />
-              </a>
-            </motion.li>
-          ))}
-        </ul>
+        <motion.div initial={{ opacity: 0, y: 24, rotate: -2 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
+          <ul className="doodle-container">
+            {SOCIALS.map((s) => (
+              <li key={s.k} className="doodle-icon-content">
+                <a className={"doodle-link link-" + s.k} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}><SocialIcon k={s.k} /></a>
+                <span className={"doodle-tooltip tooltip-" + s.k}>{s.label}</span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
       </footer>
+
+      <AnimatePresence>
+        {showConnect && (
+          <motion.aside className="connect" aria-label="Let's connect"
+            initial={{ y: 90, opacity: 0, rotate: 5 }} animate={{ y: 0, opacity: 1, rotate: -1.5 }} exit={{ y: 90, opacity: 0, rotate: 6 }} transition={{ type: "spring", stiffness: 170, damping: 13 }}>
+            <button className="connect-x" onClick={closeConnect} aria-label="Close"><Icon n="x" size={18} /></button>
+            <h4>Let&apos;s connect!</h4>
+            <p>Thanks for trying SplitSave. Follow along for more projects.</p>
+            <div className="connect-row">
+              {SOCIALS.map((s) => (
+                <a key={s.k} className={"doodle-link link-" + s.k} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label}><SocialIcon k={s.k} /></a>
+              ))}
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {session && (
