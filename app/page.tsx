@@ -34,6 +34,8 @@ const ICONS = {
   send: ["m22 2-7 20-4-9-9-4Z", "M22 2 11 13"],
   sun: ["M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8", "M12 2v2", "M12 20v2", "m4.93 4.93 1.41 1.41", "m17.66 17.66 1.41 1.41", "M2 12h2", "M20 12h2", "m6.34 17.66-1.41 1.41", "m19.07 4.93-1.41 1.41"],
   moon: ["M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"],
+  x: ["M18 6 6 18", "m6 6 12 12"],
+  megaphone: ["m3 11 18-5v12L3 14v-3z", "M11.6 16.8a3 3 0 1 1-5.8-1.6"],
   split: ["M16 3h5v5", "M8 3H3v5", "M12 22v-8.3a4 4 0 0 0-1.17-2.87L3 3", "m15 9 6-6"],
   qr: ["M4 3h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z", "M17 3h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z", "M4 16h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z", "M21 16h-3a2 2 0 0 0-2 2v3", "M21 21v.01", "M12 7v3a2 2 0 0 1-2 2H7", "M3 12h.01", "M12 3h.01", "M12 16v.01", "M16 12h1", "M21 12v.01", "M12 21v-1"],
 };
@@ -98,6 +100,12 @@ function ThemeBtn({ dark, onClick }: { dark: boolean; onClick: () => void }) {
   );
 }
 
+const NOTICE: { i: keyof typeof ICONS; t: string; d: string }[] = [
+  { i: "split", t: "Splits big payments", d: "Enter an amount above your limit and get equal QR codes, each under it." },
+  { i: "qr", t: "One QR at a time", d: "Show a QR, tap done once it is paid, and the card flips to the next one." },
+  { i: "clock", t: "Keeps a record", d: "Every payment goes into your history with the total and the number of payments." },
+];
+
 const ord = (n: number) => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
 function Face({ s, k, back }: { s: Session; k: number; back?: boolean }) {
@@ -155,6 +163,7 @@ export default function Home() {
   const [launch, setLaunch] = useState(false);
   const [siteUrl, setSiteUrl] = useState("");
   const [shown, setShown] = useState(20);
+  const [notice, setNotice] = useState(false);
   const [fi, setFi] = useState<[number, number]>([0, 1]);
 
   useEffect(() => {
@@ -167,6 +176,7 @@ export default function Home() {
   }, []);
   useEffect(() => { try { localStorage.setItem("splitpay", JSON.stringify({ upi, name })); } catch {} }, [upi, name]);
   useEffect(() => { document.body.style.overflow = session ? "hidden" : ""; }, [session]);
+  useEffect(() => { try { if (!localStorage.getItem("splitsave-notice-v1")) setNotice(true); } catch { setNotice(true); } }, []);
   useEffect(() => { setDark(document.documentElement.dataset.theme === "dark"); setSiteUrl(window.location.href); }, []);
   useEffect(() => { document.documentElement.dataset.theme = dark ? "dark" : "light"; }, [dark]);
   const persist = (h: Entry[]) => { setHistory(h); try { localStorage.setItem("splitpay-history", JSON.stringify(h)); } catch {} };
@@ -198,6 +208,7 @@ export default function Home() {
       persist([{ id: Date.now(), total: session.total, parts: session.parts, split: session.split, at: new Date().toISOString() }, ...history]);
     }, 600);
   };
+  const closeNotice = () => { setNotice(false); try { localStorage.setItem("splitsave-notice-v1", "1"); } catch {} };
   const notify = (m: string) => { setToast(m); setTimeout(() => setToast(null), 1800); };
   const toggleTheme = () => { const n = !dark; setDark(n); try { localStorage.setItem("splitsave-theme", n ? "dark" : "light"); } catch {} };
   const generate = () => { if (launch) return; setLaunch(true); setTimeout(() => { setLaunch(false); start(); }, 520); };
@@ -222,6 +233,30 @@ export default function Home() {
         <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>Split<span>Save</span></motion.h1>
         <p>Split a large UPI payment into smaller QR codes.</p>
       </header>
+
+      <AnimatePresence>
+        {notice && (
+          <motion.aside className="raised notice" role="note" style={{ overflow: "hidden" }}
+            initial={{ opacity: 0, y: -24, height: 0, marginTop: 0 }} animate={{ opacity: 1, y: 0, height: "auto", marginTop: 26 }}
+            exit={{ opacity: 0, x: 60, height: 0, marginTop: 0 }} transition={{ type: "spring", stiffness: 180, damping: 22 }}>
+            <div className="nhead">
+              <span className="nicon"><Icon n="megaphone" size={20} /></span>
+              <strong>What SplitSave does</strong>
+              <button className="iconbtn nclose" onClick={closeNotice} aria-label="Dismiss notice"><Icon n="x" size={16} /></button>
+            </div>
+            <p className="nlead">Fees can apply to larger UPI payments. SplitSave breaks one big payment into smaller QR codes so each one stays under your limit.</p>
+            <ul className="nlist">
+              {NOTICE.map((n, i) => (
+                <motion.li key={n.t} initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 + i * 0.12 }}>
+                  <span className="ni"><Icon n={n.i} size={18} /></span>
+                  <div><b>{n.t}</b><small>{n.d}</small></div>
+                </motion.li>
+              ))}
+            </ul>
+            <small className="nfoot">Everything runs in your browser. Nothing is sent to a server.</small>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
       <section className="raised panel">
         <label>
