@@ -1,31 +1,22 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Bricolage_Grotesque, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 
 const font = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font" });
+const hand = Patrick_Hand({ subsets: ["latin"], weight: "400", variable: "--font-hand" });
 
 export const metadata: Metadata = {
   title: "SplitSave",
-  description:
-    "Split a large UPI payment into smaller equal QR codes and stay under the limit where the 0.4% charge applies. Enter your UPI ID and amount, set a limit and collect one QR at a time. Free and runs in your browser.",
-  keywords: [
-    "UPI QR code generator",
-    "split UPI payment",
-    "UPI payment splitter",
-    "UPI QR",
-    "split payment",
-    "UPI charge limit",
-    "QR code generator India",
-    "SplitSave",
-  ],
+  description: "Split a large UPI payment into smaller QR codes.",
 };
+
 const themeScript = `try{var t=localStorage.getItem("splitsave-theme");if(!t&&matchMedia("(prefers-color-scheme: dark)").matches)t="dark";document.documentElement.dataset.theme=t||"light"}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
-      <body className={font.variable}>{children}</body>
+      <body className={`${font.variable} ${hand.variable}`}>{children}</body>
     </html>
   );
 }
