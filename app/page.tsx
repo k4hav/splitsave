@@ -377,11 +377,11 @@ export default function Home() {
       </section>
 
       <footer className="foot">
-        <p>Built by Keshav</p>
-        <small>Found a bug or have a suggestion? Open an issue or a pull request in the repo.</small>
-        <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ type: "spring", stiffness: 200, damping: 18 }}>
-          <a className="repo" href="https://github.com/k4hav/splitsave" target="_blank" rel="noopener noreferrer">
-            <SocialIcon k="github" /><span>k4hav/splitsave</span>
+        <motion.div initial={{ opacity: 0, y: 16, scale: 0.8 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ type: "spring", stiffness: 200, damping: 16 }}>
+          <a className="soc" href="https://github.com/k4hav/splitsave" target="_blank" rel="noopener noreferrer"
+            aria-label="Report a bug or suggest an idea on GitHub" data-label="Report a bug or suggest an idea"
+            style={{ "--bg-brand": "linear-gradient(145deg,#8b7cf6,#5b4bd5)" } as CSSProperties}>
+            <SocialIcon k="github" />
           </a>
         </motion.div>
       </footer>
