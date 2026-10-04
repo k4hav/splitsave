@@ -378,16 +378,12 @@ export default function Home() {
 
       <footer className="foot">
         <p>Built by Keshav</p>
-        <small>Find me here</small>
-        <ul className="socials">
-          {SOCIALS.map((s, i) => (
-            <motion.li key={s.k} initial={{ opacity: 0, y: 20, scale: 0.8 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: "spring", stiffness: 220, damping: 16 }}>
-              <a className="soc" href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} data-label={s.label} style={{ "--bg-brand": s.bg } as CSSProperties}>
-                <SocialIcon k={s.k} />
-              </a>
-            </motion.li>
-          ))}
-        </ul>
+        <small>Found a bug or have a suggestion? Open an issue or a pull request in the repo.</small>
+        <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ type: "spring", stiffness: 200, damping: 18 }}>
+          <a className="repo" href="https://github.com/k4hav/splitsave" target="_blank" rel="noopener noreferrer">
+            <SocialIcon k="github" /><span>k4hav/splitsave</span>
+          </a>
+        </motion.div>
       </footer>
 
       <AnimatePresence>
