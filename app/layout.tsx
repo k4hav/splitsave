@@ -7,7 +7,7 @@ const font = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font" });
 export const metadata: Metadata = {
   title: "SplitSave",
   description:
-    "Split a large UPI payment into smaller equal QR codes. Enter your UPI ID and amount, set a limit and collect one QR at a time. Free and runs in your browser.",
+    "Split a large UPI payment into smaller equal QR codes and stay under the limit where the 0.4% charge applies. Enter your UPI ID and amount, set a limit and collect one QR at a time. Free and runs in your browser.",
   keywords: [
     "UPI QR code generator",
     "split UPI payment",
