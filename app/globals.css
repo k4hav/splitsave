@@ -137,7 +137,6 @@ button:focus-visible { outline:2px solid rgba(108,92,231,.5); outline-offset:3px
 
 .foot { margin-top:60px; text-align:center; display:grid; justify-items:center; gap:4px; }
 .foot::before { content:""; width:100%; height:4px; border-radius:4px; margin-bottom:28px; box-shadow:inset 2px 2px 3px var(--d),inset -2px -2px 3px var(--l); }
-.foot p { font-weight:800; font-size:1.05rem; letter-spacing:-.01em; }
 
 
 .soc { position:relative; isolation:isolate; width:54px; height:54px; border-radius:50%; display:grid; place-items:center; color:var(--ink); background:var(--bg); box-shadow:6px 6px 12px var(--d),-6px -6px 12px var(--l); transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,color .3s; }
@@ -156,9 +155,12 @@ button:focus-visible { outline:2px solid rgba(108,92,231,.5); outline-offset:3px
 .connect-row { display:flex; gap:20px; padding:4px 2px; }
 .connect-x { position:absolute; top:14px; right:14px; }
 
-.foot small { max-width:34ch; line-height:1.45; }
-.repo { display:inline-flex; align-items:center; gap:10px; margin-top:16px; padding:12px 22px; border-radius:99px; font-weight:700; font-size:.92rem; color:var(--ink); background:var(--bg); box-shadow:6px 6px 12px var(--d),-6px -6px 12px var(--l); transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,background .3s,color .3s; }
-.repo .soc-svg { width:20px; height:20px; }
-.repo:hover,.repo:focus-visible { transform:translateY(-4px); background:#24292f; color:#fff; box-shadow:0 14px 22px -8px rgba(0,0,0,.45); outline:none; }
-.repo:hover .soc-svg { transform:rotate(-10deg) scale(1.1); }
-.repo:active { transform:none; }
+
+a { color:inherit; text-decoration:none; }
+.tooltip-container { position:relative; z-index:30; display:inline-flex; cursor:pointer; font-size:17px; padding:.7em; border-radius:50px; background:linear-gradient(138deg,#000 15%,#001f2e 65%); box-shadow:0 .5rem 1rem rgba(0,0,0,.1),4px 4px 9px var(--d); transition:background .5s; outline:none; }
+[data-theme="dark"] .tooltip-container { box-shadow:0 0 0 1px rgba(255,255,255,.1),0 .5rem 1rem rgba(0,0,0,.25); }
+.tooltip-container:hover,.tooltip-container:focus-within { background:#fff; }
+.tooltip-container .text { display:flex; align-items:center; justify-content:center; fill:#fff; transition:fill .5s; }
+.tooltip-container:hover .text,.tooltip-container:focus-within .text { fill:#000; }
+.tooltip-container:hover .tip,.tooltip-container:focus-within .tip { top:var(--y); right:var(--x); opacity:1; visibility:visible; transition-delay:calc(var(--i)*30ms); }
+.tooltip-container .tip:hover { background:var(--hc); fill:#fff; transition-delay:0s; }
